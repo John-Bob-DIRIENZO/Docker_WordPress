@@ -20,11 +20,17 @@
 <?php endwhile; ?>
 <?php
 
+/*
 $terms_slug = [];
 $terms = get_the_terms(get_the_ID(), 'style');
 foreach ($terms as $term) {
     $terms_slug[] = $term->name;
 }
+*/
+// Les deux fonctionnent
+$terms_slug = array_map(function ($term) {
+    return $term->name;
+}, get_the_terms(get_the_ID(), 'style'));
 
 $query = new WP_Query([
     'post_type' => 'event',

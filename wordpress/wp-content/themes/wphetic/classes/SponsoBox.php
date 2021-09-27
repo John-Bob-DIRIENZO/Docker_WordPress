@@ -56,4 +56,12 @@ class SponsoBox
             delete_post_meta($post_id, $this->price);
         }
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMetakey()
+    {
+        return $this->metakey;
+    }
 }

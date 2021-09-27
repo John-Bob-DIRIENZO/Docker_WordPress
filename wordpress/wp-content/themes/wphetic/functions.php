@@ -125,9 +125,39 @@ add_filter('manage_event_posts_columns', function ($col) {
 add_action('manage_event_posts_custom_column', function ($col, $post_id) {
     if ($col === 'image') {
         the_post_thumbnail('thumbnail', $post_id);
-    }
-    elseif ($col === 'price') {
+    } elseif ($col === 'price') {
         echo get_post_meta($post_id, 'event_prix', true) . " €";
     }
 
 }, 10, 2);
+
+add_filter('query_vars', function ($params) {
+    $params[] = 'sponso';
+    $params[] = 'price';
+    return $params;
+});
+
+add_action('pre_get_posts', function (WP_Query $query) use ($sponso) {
+    if (is_admin() || !$query->is_main_query()) {
+        return;
+    }
+    if ($query->get('post_type') !== 'event' && get_query_var('sponso') === '1') {
+        $meta_query = $query->get('meta_query', []);
+        $meta_query[] = array(
+            'key' => $sponso->getMetakey(),
+            'compare' => 'EXISTS'
+        );
+        $query->set('meta_query', $meta_query);
+    }
+
+    if ($query->get('post_type') === 'event' && !empty(get_query_var('price'))) {
+        $meta_query = $query->get('meta_query', []);
+        $meta_query[] = array(
+            'key' => 'event_prix',
+            'value' => get_query_var('price'),
+            'compare' => '<=',
+            'type' => 'NUMERIC'
+        );
+        $query->set('meta_query', $meta_query);
+    }
+});
