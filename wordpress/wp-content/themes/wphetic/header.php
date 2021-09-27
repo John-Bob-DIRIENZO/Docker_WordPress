@@ -34,6 +34,12 @@
         </div>
     </nav>
 
+    <?php if (get_option('wphetic_banner_active') == 'true') : ?>
+        <div class="alert alert-danger" role="alert">
+            <?= get_option('custom_header_banner'); ?>
+        </div>
+    <?php endif; ?>
+
 <?php endif; ?>
 
 <div class="container mt-5 mb-5">

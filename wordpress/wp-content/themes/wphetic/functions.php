@@ -101,6 +101,9 @@ function wphetic_register_event_cpt()
 require_once 'classes/SponsoBox.php';
 $sponso = new SponsoBox('wphetic_sponso');
 
+require_once 'classes/BannerMessage.php';
+BannerMessage::init();
+
 add_action('after_setup_theme', 'wphetic_theme_support');
 add_action('wp_enqueue_scripts', 'wphetic_bootstrap');
 add_filter('login_headerurl', 'wphetic_login_headerurl');
