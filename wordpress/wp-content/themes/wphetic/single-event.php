@@ -16,6 +16,48 @@
             </div>
         </div>
     </div>
+
 <?php endwhile; ?>
+<?php
+
+$terms_slug = [];
+$terms = get_the_terms(get_the_ID(), 'style');
+foreach ($terms as $term) {
+    $terms_slug[] = $term->name;
+}
+
+$query = new WP_Query([
+    'post_type' => 'event',
+    'post__not_in' => [get_the_ID()],
+    'tax_query' => array(
+        array(
+            'taxonomy' => 'style',
+            'field' => 'slug',
+            'terms' => $terms_slug
+        )
+    ),
+    'meta_query' => array(
+        array(
+            'key' => 'event_prix',
+            'value' => get_post_meta(get_the_ID(), 'event_prix', true),
+            'compare' => '<=',
+            'type' => 'NUMERIC'
+        )
+    ),
+    'posts_per_page' => 3,
+    'orderby' => 'rand'
+]);
+
+if ($query->have_posts()) : ?>
+    <h2 class="display-4 mt-5">Vous aimerez aussi ces évènements moins chers</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <?php
+        while ($query->have_posts()) : $query->the_post();
+            get_template_part('partials/card', 'event');
+        endwhile; ?>
+    </div>
+<?php endif;
+wp_reset_postdata();
+?>
 
 <?php get_footer(); ?>

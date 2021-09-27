@@ -110,3 +110,24 @@ add_filter('login_headerurl', 'wphetic_login_headerurl');
 add_filter('admin_footer_text', 'wp_hetic_admin_footer_hearts');
 add_filter('nav_menu_css_class', 'wphetic_nav_menu_css_class');
 add_filter('nav_menu_link_attributes', 'wphetic_nav_menu_link_attributes');
+
+add_filter('manage_event_posts_columns', function ($col) {
+    return array(
+        'cb' => $col['cb'],
+        'title' => $col['title'],
+        'image' => 'Image',
+        'price' => 'Prix',
+        'taxonomy-style' => $col['taxonomy-style'],
+        'date' => $col['date']
+    );
+});
+
+add_action('manage_event_posts_custom_column', function ($col, $post_id) {
+    if ($col === 'image') {
+        the_post_thumbnail('thumbnail', $post_id);
+    }
+    elseif ($col === 'price') {
+        echo get_post_meta($post_id, 'event_prix', true) . " €";
+    }
+
+}, 10, 2);

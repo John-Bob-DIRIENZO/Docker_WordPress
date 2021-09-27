@@ -8,15 +8,46 @@ class BannerMessage
     const MENU_PAGE_NAME = 'wphetic_header_banner';
     const BANNER_MESSAGE = 'custom_header_banner';
     const BANNER_ACTIVE = 'wphetic_banner_active';
+    const BANNER_DATE = 'wphetic_banner_date';
 
     public static function init()
     {
         add_action('admin_menu', [self::class, 'addMenu']);
         add_action('admin_init', [self::class, 'registerSetting']);
+        add_action('admin_enqueue_scripts', [self::class, 'flatpickr']);
+    }
+
+    public static function flatpickr($suffix)
+    {
+        if ($suffix === 'toplevel_page_wphetic_header_banner') {
+            wp_enqueue_style(
+                'distant_flatpickr_css',
+                'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css'
+            );
+
+            wp_enqueue_script(
+                'distant_flatpickr_js',
+                'https://cdn.jsdelivr.net/npm/flatpickr',
+                [],
+                false,
+                true
+            );
+
+            wp_enqueue_script(
+                'wphetic_admin_js',
+                get_template_directory_uri() . '/assets/js/admin.js',
+                ['distant_flatpickr_js'],
+                false,
+                true
+            );
+        }
     }
 
     public static function registerSetting()
     {
+        /**
+         * Textarea
+         */
         register_setting(
             self::OPTION_GROUP,
             self::BANNER_MESSAGE,
@@ -37,13 +68,17 @@ class BannerMessage
             'Message de la bannière',
             function () {
                 ?>
-                <textarea name=<?= self::BANNER_MESSAGE; ?>><?= get_option(self::BANNER_MESSAGE); ?></textarea>
+                <textarea
+                        name=<?= self::BANNER_MESSAGE; ?>><?= esc_html(get_option(self::BANNER_MESSAGE)); ?></textarea>
                 <?php
             },
             self::MENU_PAGE_NAME,
             self::SETTING_SECTION
         );
 
+        /**
+         * Checkbox : Active
+         */
         register_setting(
             self::OPTION_GROUP,
             self::BANNER_ACTIVE,
@@ -57,6 +92,27 @@ class BannerMessage
                 ?>
                 <input type="checkbox" name="<?= self::BANNER_ACTIVE; ?>"
                        value="true" <?php checked(get_option(self::BANNER_ACTIVE), 'true'); ?>>
+                <?php
+            },
+            self::MENU_PAGE_NAME,
+            self::SETTING_SECTION
+        );
+
+        /**
+         * Date
+         */
+        register_setting(
+            self::OPTION_GROUP,
+            self::BANNER_DATE
+        );
+
+        add_settings_field(
+            'wphetic_date_banner',
+            'Une belle date ?',
+            function () {
+                ?>
+                <input type="date" name="<?= self::BANNER_DATE; ?>"
+                       value=" <?= get_option(self::BANNER_DATE); ?>" class="wphetic_datepickr">
                 <?php
             },
             self::MENU_PAGE_NAME,
