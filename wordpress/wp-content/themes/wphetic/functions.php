@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Déclaration des support du thème
+ */
+add_action('after_setup_theme', 'wphetic_theme_support');
 function wphetic_theme_support()
 {
     add_theme_support('title-tag');
@@ -9,6 +13,10 @@ function wphetic_theme_support()
     register_nav_menu('footer', 'Navigation dans le footer');
 }
 
+/**
+ * Déclaration des feuilles CSS et JS de Bootstrap
+ */
+add_action('wp_enqueue_scripts', 'wphetic_bootstrap');
 function wphetic_bootstrap()
 {
     wp_enqueue_style('bootstrap_css',
@@ -18,6 +26,11 @@ function wphetic_bootstrap()
         [], false, true);
 }
 
+/**
+ * Style de la navigation
+ */
+add_filter('nav_menu_css_class', 'wphetic_nav_menu_css_class');
+add_filter('nav_menu_link_attributes', 'wphetic_nav_menu_link_attributes');
 function wphetic_nav_menu_css_class($classes): array
 {
     $classes[] = 'nav-item';
@@ -30,6 +43,9 @@ function wphetic_nav_menu_link_attributes($atts)
     return $atts;
 }
 
+/**
+ * Pagination custom
+ */
 function wphetic_paginate_links()
 {
     $pages = paginate_links(['type' => 'array']);
@@ -54,6 +70,9 @@ function wphetic_paginate_links()
     return ob_get_clean();
 }
 
+/**
+ * Enregistrement des taxonomies
+ */
 add_action('init', 'wphetic_register_style_taxonomy');
 function wphetic_register_style_taxonomy()
 {
@@ -75,6 +94,9 @@ function wphetic_register_style_taxonomy()
     register_taxonomy('style', ['event'], $args);
 }
 
+/**
+ * Enregistrement du CPT
+ */
 add_action('init', 'wphetic_register_event_cpt');
 function wphetic_register_event_cpt()
 {
@@ -98,18 +120,23 @@ function wphetic_register_event_cpt()
     register_post_type('event', $args);
 }
 
+/**
+ * Meta-Box
+ */
 require_once 'classes/SponsoBox.php';
 $sponso = new SponsoBox('wphetic_sponso');
 
+/**
+ * Message en bannière
+ */
 require_once 'classes/BannerMessage.php';
 BannerMessage::init();
 
-add_action('after_setup_theme', 'wphetic_theme_support');
-add_action('wp_enqueue_scripts', 'wphetic_bootstrap');
+/**
+ * Anciens hooks pour le cours
+ */
 add_filter('login_headerurl', 'wphetic_login_headerurl');
 add_filter('admin_footer_text', 'wp_hetic_admin_footer_hearts');
-add_filter('nav_menu_css_class', 'wphetic_nav_menu_css_class');
-add_filter('nav_menu_link_attributes', 'wphetic_nav_menu_link_attributes');
 
 add_filter('manage_event_posts_columns', function ($col) {
     return array(
@@ -122,6 +149,9 @@ add_filter('manage_event_posts_columns', function ($col) {
     );
 });
 
+/**
+ * Ajout de colonnes custom dans le back-office
+ */
 add_action('manage_event_posts_custom_column', function ($col, $post_id) {
     if ($col === 'image') {
         the_post_thumbnail('thumbnail', $post_id);
@@ -131,12 +161,18 @@ add_action('manage_event_posts_custom_column', function ($col, $post_id) {
 
 }, 10, 2);
 
+/**
+ * Ajout de params dans l'URL
+ */
 add_filter('query_vars', function ($params) {
     $params[] = 'sponso';
     $params[] = 'price';
     return $params;
 });
 
+/**
+ * Modif de la query via les params en URL
+ */
 add_action('pre_get_posts', function (WP_Query $query) use ($sponso) {
     if (is_admin() || !$query->is_main_query()) {
         return;
@@ -160,4 +196,18 @@ add_action('pre_get_posts', function (WP_Query $query) use ($sponso) {
         );
         $query->set('meta_query', $meta_query);
     }
+});
+
+/**
+ * Enregistrement d'une sidebar
+ */
+add_action('widgets_init', function () {
+    register_sidebar([
+        'name' => 'SideBar Perso',
+        'id' => 'wphetic_sidebar',
+        'before_widget' => '<div class="p-3 %2$s" id="%1$s">',
+        'after_widget' => '</div>',
+        'before_title' => '<h4 class="font-italic">',
+        'after_title' => '</h4>'
+    ]);
 });

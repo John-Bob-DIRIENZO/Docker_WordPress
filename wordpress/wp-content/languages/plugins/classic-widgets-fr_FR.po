@@ -1,0 +1,32 @@
+# Translation of Plugins - Classic Widgets - Stable (latest release) in French (France)
+# This file is distributed under the same license as the Plugins - Classic Widgets - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2021-05-10 08:18:22+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: GlotPress/3.0.0-alpha.2\n"
+"Language: fr\n"
+"Project-Id-Version: Plugins - Classic Widgets - Stable (latest release)\n"
+
+#. Author URI of the plugin
+msgid "https://github.com/WordPress/classic-widgets/"
+msgstr "https://github.com/WordPress/classic-widgets/"
+
+#. Author of the plugin
+msgid "WordPress Contributors"
+msgstr "Contributeurs et contributrices WordPress"
+
+#. Description of the plugin
+msgid "Enables the classic widgets settings screens in Appearance - Widgets and the Customizer. Disables the block editor from managing widgets."
+msgstr "Réactive l’écran de widgets classique situé dans Apparence - Widgets ainsi que l’outil de personnalisation. Désactive la gestion des widgets via l’éditeur de blocs."
+
+#. Plugin URI of the plugin
+msgid "https://wordpress.org/plugins/classic-widgets/"
+msgstr "https://fr.wordpress.org/plugins/classic-widgets/"
+
+#. Plugin Name of the plugin
+msgid "Classic Widgets"
+msgstr "Classic Widgets"
