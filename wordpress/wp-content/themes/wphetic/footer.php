@@ -17,6 +17,16 @@
                 ]); ?>
 
             </div>
+
+            <div class="px-3">
+                <?php
+                the_widget(Wphetic_SocialLinks::class, [
+                    'facebook' => 'https://www.facebook.com/jf.dirienzo',
+                    'instagram' => 'https://www.instagram.com/mixedby_jf/'
+                ]);
+                ?>
+            </div>
+
         </div>
     </nav>
 

@@ -11,7 +11,9 @@
 
 <?php if (!is_front_page()) : ?>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark"
+         style="background: <?= get_theme_mod('wphetic_nav_bg_color'); ?> !important">
+
         <div class="container-fluid">
             <a class="navbar-brand" href="/"><?php bloginfo('name'); ?></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

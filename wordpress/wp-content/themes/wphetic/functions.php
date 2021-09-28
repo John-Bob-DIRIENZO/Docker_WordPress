@@ -114,11 +114,45 @@ function wphetic_register_event_cpt()
         'menu_icon' => 'dashicons-tickets',
         'supports' => ['title', 'editor', 'excerpt', 'thumbnail', 'custom-fields'],
         'has_archive' => true,
-        'taxonomies' => ['style']
+        'taxonomies' => ['style'],
+        'capabilities' => array(
+            'edit_post' => 'manage_events',
+            'read_post' => 'manage_events',
+            'delete_post' => 'manage_events',
+        ),
     ];
 
     register_post_type('event', $args);
 }
+
+/**
+ * Modifier les rôles de l'admin
+ * quand on active le thème
+ */
+add_action('after_switch_theme', function () {
+    $admin = get_role('administrator');
+    $admin->add_cap('manage_events');
+});
+
+/**
+ * Ajout d'un rôle Event Manager
+ * quand on active le thème
+ */
+add_action('after_switch_theme', function () {
+    add_role('event_manager', 'Event Manager', [
+        'read' => true,
+        'manage_events' => true
+    ]);
+});
+
+/**
+ * Nettoyage à la désactivation du thème
+ */
+add_action('switch_theme', function () {
+    $admin = get_role('administrator');
+    $admin->remove_cap('manage_events');
+    remove_role('event_manager');
+});
 
 /**
  * Meta-Box
@@ -210,4 +244,42 @@ add_action('widgets_init', function () {
         'before_title' => '<h4 class="font-italic">',
         'after_title' => '</h4>'
     ]);
+});
+
+/**
+ * Création d'un widget
+ */
+require_once 'widgets/Wphetic_InstagramWidget.php';
+require_once 'widgets/Wphetic_SocialLinks.php';
+add_action('widgets_init', function () {
+    register_widget(Wphetic_InstagramWidget::class);
+    register_widget(Wphetic_SocialLinks::class);
+});
+
+/**
+ * Des termes au changement de thème
+ */
+add_action('after_switch_theme', function () {
+    wp_insert_term('Dubstep', 'style');
+    flush_rewrite_rules();
+});
+
+/**
+ * L'onglet de personnalisation
+ */
+add_action('customize_register', function (WP_Customize_Manager $manager) {
+
+    $manager->add_section('wphetic_nav_color', [
+        'title' => 'Couleur du header'
+    ]);
+
+    $manager->add_setting('wphetic_nav_bg_color', [
+        'default' => '#000000',
+        'sanitize' => 'sanitize_hex_color'
+    ]);
+
+    $manager->add_control(new WP_Customize_Color_Control($manager, 'wphetic_nav_bg_color', [
+        'section' => 'wphetic_nav_color',
+        'label' => 'Couleur de la NavBar'
+    ]));
 });
