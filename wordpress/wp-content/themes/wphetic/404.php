@@ -3,17 +3,25 @@
 <h1>Got lost ?</h1>
 <img src="/wp-content/uploads/2021/09/confused-meme.gif">
 
-<hr />
+<hr/>
 
-<?= do_shortcode('[display_events nbre_posts=2]'); ?>
+<?= do_shortcode( '[display_events nbre_posts=2]' ); ?>
 
 <?php
 echo '<hr /><pre>';
-$role = get_role('administrator');
-print_r($role->capabilities);
+$role = get_role( 'administrator' );
+print_r( $role->capabilities );
 ?>
 
 </pre>
+<hr/>
+<?= do_shortcode( '[wphetic_form]' ); ?>
 <hr />
-<?= do_shortcode('[wphetic_form]'); ?>
+
+<?= do_shortcode( '[wphetic_login_form]' ); ?>
+
+<hr />
+
+<?= do_shortcode('[add_event]'); ?>
+
 <?php get_footer(); ?>
