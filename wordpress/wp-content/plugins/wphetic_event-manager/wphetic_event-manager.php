@@ -83,12 +83,30 @@ function wphetic_register_event_cpt() {
 	register_post_type( 'event', $args );
 }
 
-add_filter('query_vars', function ($vars) {
+/**
+ * Enregistre ma méta pour pouvoir l'afficher dans la REST API
+ */
+add_action( 'rest_api_init', function () {
+	register_meta( 'post', 'event_prix', array(
+		'type'         => 'number',
+		'description'  => 'event price',
+		'single'       => true,
+		'show_in_rest' => true // C'est surtout ça qui nous intéresse
+	) );
+} );
+
+/**
+ * Rajoute la query "message" dans les query acceptées
+ */
+add_filter( 'query_vars', function ( $vars ) {
 	$vars[] = 'message';
+
 	return $vars;
-});
+} );
 
-
+/**
+ * Affiche X évènements aléatoirement
+ */
 add_shortcode( 'display_events', function ( $attr ) {
 
 	$values = shortcode_atts( [
@@ -101,6 +119,10 @@ add_shortcode( 'display_events', function ( $attr ) {
 	return $query->render();
 } );
 
+/**
+ * Permet d'afficher un formulaire et d'enregistrer
+ * un nouvel évènement depuis le frontend
+ */
 require_once 'classes/Wphetic_AddEvent.php';
 add_shortcode( 'add_event', function () {
 	$manager = new Wphetic_AddEvent();

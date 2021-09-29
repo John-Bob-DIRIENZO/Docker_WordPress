@@ -16,12 +16,12 @@ print_r( $role->capabilities );
 </pre>
 <hr/>
 <?= do_shortcode( '[wphetic_form]' ); ?>
-<hr />
+<hr/>
 
 <?= do_shortcode( '[wphetic_login_form]' ); ?>
 
-<hr />
+<hr/>
 
-<?= do_shortcode('[add_event]'); ?>
+<?= do_shortcode( '[add_event]' ); ?>
 
 <?php get_footer(); ?>
