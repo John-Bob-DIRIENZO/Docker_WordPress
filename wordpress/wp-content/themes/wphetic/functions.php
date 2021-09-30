@@ -304,3 +304,36 @@ add_action( 'customize_register', function ( WP_Customize_Manager $manager ) {
 //
 //require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 //dbDelta( $sql );
+
+add_action( 'rest_api_init', function () {
+	register_rest_route( 'wphetic/v1',
+		'/demo/(?P<message>[a-zA-Z-]+)',
+		array(
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => 'callback_de_lecture',
+				'permission_callback' => '__return_true'
+			),
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => 'callback_edition',
+				'permission_callback' => '__return_true'
+			),
+		)
+	);
+} );
+
+function callback_de_lecture( WP_REST_Request $request ) {
+	$res = new WP_REST_Response( [ 'message' => 'bonne lecture' ] );
+	$res->set_headers( [ 'Access-Control-Allow-Origin' => '*' ] );
+
+	return $res;
+
+}
+
+function callback_edition( WP_REST_Request $request ) {
+	$res = new WP_REST_Response( [ 'message' => 'bon upload' ] );
+	$res->set_headers( [ 'Access-Control-Allow-Origin' => '*' ] );
+
+	return $res;
+}
