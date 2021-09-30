@@ -337,3 +337,5 @@ function callback_edition( WP_REST_Request $request ) {
 
 	return $res;
 }
+
+
